@@ -3,39 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Future Boost Quiz League - Audio & Image Fixed</title>
+<title>Future Boost Quiz League - Dynamic Switch</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-:root { 
-    --neon-blue: #00eaff; --neon-pink: #ff4dff; --gold: #ffd700; 
-    --correct: #28a745; --wrong: #dc3545; --selected: #ff9900; 
+/* Base Styles */
+:root { 
+    --neon-blue: #00eaff; --neon-pink: #ff4dff; --gold: #ffd700; 
+    --correct: #28a745; --wrong: #dc3545; --selected: #ff9900; 
 }
 *{ margin:0; padding:0; box-sizing:border-box; }
-body { 
-    height:100vh; overflow:hidden; font-family:'Poppins',sans-serif; 
-    background: linear-gradient(rgba(0,0,20,0.90),rgba(0,0,20,0.92)), 
-    url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop');
-    background-size:cover; background-position:center; color:white;
+body { 
+    height:100vh; overflow:hidden; font-family:'Poppins',sans-serif; 
+    background: linear-gradient(rgba(0,0,20,0.90),rgba(0,0,20,0.92)), 
+    url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop');
+    background-size:cover; background-position:center; color:white;
 }
 
-/* --- SCREEN 1 --- */
-#screen-1 { display: grid; grid-template-columns: 280px 1fr 280px; gap: 15px; padding: 15px 15px 100px 15px; height: 100vh; }
-.side-panel { background:rgba(0,0,40,0.55); border:2px solid var(--neon-blue); border-radius:20px; backdrop-filter:blur(10px); padding:15px; display:flex; flex-direction:column; justify-content: space-between; }
+/* --- SCREEN 1: FULL DASHBOARD (Side Panels) --- */
+#screen-1 {
+    display: grid; grid-template-columns: 280px 1fr 280px; 
+    gap: 15px; padding: 15px 15px 100px 15px; height: 100vh;
+}
+.side-panel { 
+    background:rgba(0,0,40,0.55); border:2px solid var(--neon-blue); border-radius:20px; 
+    backdrop-filter:blur(10px); padding:15px; display:flex; flex-direction:column; justify-content: space-between;
+}
 .admin-section { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 15px; align-items: center; }
 .img-frame { width:140px; height:140px; border-radius:50%; border:3px solid var(--neon-blue); overflow:hidden; margin: 0 auto 8px; box-shadow:0 0 15px var(--neon-blue); }
 .img-frame img { width:100%; height:100%; object-fit:cover; }
 .name-tag { font-family: 'Orbitron'; font-size: 16px; color: var(--neon-blue); font-weight: 700; text-align: center; }
+
 .center-welcome { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
 .main-title { font-family:'Orbitron'; font-size: 60px; font-weight: 900; color: white; text-shadow: 0 0 15px var(--neon-blue); }
-.start-btn { padding:15px 40px; border:2px solid var(--neon-blue); border-radius:15px; background:rgba(0,0,40,0.65); font-family:'Orbitron'; font-size:32px; color:var(--gold); cursor: pointer; margin-top: 20px; text-shadow: 0 0 10px gold; }
+.start-btn { 
+    padding:15px 40px; border:2px solid var(--neon-blue); border-radius:15px; 
+    background:rgba(0,0,40,0.65); font-family:'Orbitron'; font-size:32px; color:var(--gold); 
+    cursor: pointer; margin-top: 20px; transition: 0.3s; text-shadow: 0 0 10px gold;
+}
+.start-btn:hover { transform: scale(1.05); background: rgba(0,234,255,0.2); }
 
-/* --- SCREEN 2 --- */
+/* --- SCREEN 2: ACTIVE QUIZ AREA (Same as 2nd Code) --- */
 #screen-2 { display: none; flex-direction: column; height: 100vh; }
-.header-branding { padding: 10px 40px; border-bottom: 3px solid var(--neon-blue); background: rgba(0,0,60,0.85); display: flex; justify-content: space-between; align-items: center; min-height: 140px; }
-.q-admin-profile { text-align: center; width: 150px; }
-.q-img-ring { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--neon-blue); overflow: hidden; margin: 0 auto 5px; box-shadow: 0 0 10px var(--neon-blue); }
+.header-branding {
+    padding: 20px 40px 10px 40px; border-bottom: 3px solid var(--neon-blue);
+    background: rgba(0,0,60,0.85); backdrop-filter: blur(15px);
+    display: flex; justify-content: space-between; align-items: flex-end; min-height: 160px;
+}
+.q-admin-profile { text-align: center; width: 150px; flex-shrink: 0; padding-bottom: 5px; }
+.q-img-ring { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--neon-blue); overflow: hidden; box-shadow: 0 0 12px var(--neon-blue); margin: 0 auto 5px; }
 .q-img-ring img { width: 100%; height: 100%; object-fit: cover; }
 
 .timer-section { width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 15px; }
@@ -51,7 +68,9 @@ body {
 .option.selected { background: var(--selected) !important; color: black; font-weight: bold; }
 .option.correct { background: var(--correct) !important; color: white; border-color: white; box-shadow: 0 0 20px var(--correct); }
 .option.wrong { background: var(--wrong) !important; color: white; }
+
 #explanation-box { width: 90%; max-width: 1050px; margin-top: 20px; padding: 15px; background: rgba(0, 234, 255, 0.1); border: 1px dashed var(--neon-blue); border-radius: 10px; text-align: center; display: none; }
+
 .footer-controls { padding: 15px; background: rgba(0,0,10,0.95); border-top: 3px solid var(--neon-blue); display: flex; justify-content: center; gap: 40px; align-items: center; position: relative; }
 .nav-btn { padding: 12px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; font-size: 16px; border: none; }
 </style>
@@ -59,75 +78,83 @@ body {
 
 <body onclick="enableAudio()">
 
-<!-- SCREEN 1 -->
+<!-- SCREEN 1: DASHBOARD -->
 <div id="screen-1">
-    <div class="side-panel">
-        <div style="font-family:'Orbitron'; text-align:center; color:var(--neon-blue);">MANAGEMENT</div>
-        <div class="admin-section">
-            <div class="admin-card">
-                <div class="img-frame"><img src="sanjeev.jpg"></div>
-                <div class="name-tag">Sanjeev Kumar</div>
-                <div style="font-size:12px; opacity:0.8; text-align:center;">Founder & Director of FBCA</div>
-            </div>
-            <div class="admin-card">
-                <div class="img-frame" style="border-color:var(--gold);"><img src="file:///D:/Docoments/Ankit.jpg"></div>
-                <div class="name-tag" style="color:var(--gold);">Ankit Kumar</div>
-                <div style="font-size:12px; opacity:0.8; text-align:center;">Branch Manager of T.E.P.L</div>
-            </div>
-        </div>
-    </div>
-    <div class="center-welcome">
-        <div class="main-title">FUTURE BOOST</div>
-        <div style="font-family:'Orbitron'; font-size:35px; color:var(--neon-blue); letter-spacing:5px;">QUIZ LEAGUE</div>
-        <div class="start-btn" onclick="document.getElementById('excel-file').click()">START QUIZ</div>
-        <input type="file" id="excel-file" accept=".xlsx, .xls" hidden>
-    </div>
-    <div class="side-panel" style="border-color:var(--neon-pink);">
-        <div style="font-family:'Orbitron'; text-align:center; color:var(--neon-pink);">QUIZ RULES</div>
-        <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:20px; font-size:16px;">
-            <p>1. Each student gets 5 questions</p>
-            <p>2. Answer only A, B, C, D</p>
-            <p>3. No cheating allowed</p>
-        </div>
-    </div>
+    <div class="side-panel">
+        <div style="font-family:'Orbitron'; text-align:center; color:var(--neon-blue); font-size:16px;">MANAGEMENT</div>
+        <div class="admin-section">
+            <div class="admin-card">
+                <div class="img-frame"><img src="Sanjeev.jpg"></div>
+                <div class="name-tag">Sanjeev Kumar</div>
+                <div style="font-size:12px; text-align:center; opacity:0.8;">Founder & Director of FBCA</div>
+            </div>
+            <div class="admin-card">
+                <div class="img-frame" style="border-color:var(--gold);"><img src="Ankit.jpg"></div>
+                <div class="name-tag" style="color:var(--gold);">Ankit Kumar</div>
+                <div style="font-size:12px; text-align:center; opacity:0.8;">Branch Manager of T.E.P.L</div>
+            </div>
+        </div>
+        <div style="text-align:center; font-style:italic; font-size:14px; color:var(--neon-blue); border-top:1px solid rgba(0,234,255,0.2); padding-top:10px;">"Knowledge Today, Success Tomorrow"</div>
+    </div>
+
+    <div class="center-welcome">
+        <div class="main-title">FUTURE BOOST</div>
+        <div style="font-family:'Orbitron'; font-size:35px; color:var(--neon-blue); letter-spacing:5px;">QUIZ LEAGUE</div>
+        <div class="start-btn" onclick="document.getElementById('excel-file').click()">START QUIZ</div>
+        <input type="file" id="excel-file" accept=".xlsx, .xls" hidden>
+    </div>
+
+    <div class="side-panel" style="border-color:var(--neon-pink);">
+        <div style="font-family:'Orbitron'; text-align:center; color:var(--neon-pink); font-size:18px;">QUIZ RULES</div>
+        <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:20px; font-size:16px;">
+            <p><span style="color:var(--neon-blue); font-weight:bold;">1.</span> Each student gets 5 questions</p>
+            <p><span style="color:var(--neon-blue); font-weight:bold;">2.</span> Answer only A, B, C, D</p>
+            <p><span style="color:var(--neon-blue); font-weight:bold;">3.</span> No cheating allowed</p>
+            <p><span style="color:var(--neon-blue); font-weight:bold;">4.</span> Teacher decision final</p>
+        </div>
+        <div style="text-align:center; color:var(--neon-pink); font-style:italic; font-size:18px;">Play Fair, Win Honor</div>
+    </div>
 </div>
 
-<!-- SCREEN 2 -->
+<!-- SCREEN 2: ACTIVE QUIZ (Same as your 2nd Code) -->
 <div id="screen-2">
-    <header class="header-branding">
-        <div class="q-admin-profile">
-            <div class="q-img-ring"><img src="sanjeev.jpg"></div>
-            <div style="font-family:'Orbitron'; font-size:12px; color:var(--neon-blue);">Sanjeev Kumar</div>
-        </div>
-        <div style="text-align:center;">
-            <h2 style="font-family:'Orbitron'; color:var(--neon-pink); font-size:20px;">FUTURE BOOST QUIZ LEAGUE</h2>
-            <h1 style="font-family:'Orbitron'; font-size:28px;">FUTURE BOOST COMPUTER ACADEMY</h1>
-        </div>
-        <div class="q-admin-profile">
-            <div class="q-img-ring" style="border-color:var(--gold);"><img src="file:///D:/Docoments/Ankit.jpg"></div>
-            <div style="font-family:'Orbitron'; font-size:12px; color:var(--gold);">Ankit Kumar</div>
-        </div>
-    </header>
+    <header class="header-branding">
+        <div class="q-admin-profile">
+            <div class="q-img-ring"><img src="sanjeev.jpg"></div>
+            <div style="font-family:'Orbitron'; font-size:12px; color:var(--neon-blue);">Sanjeev Kumar</div>
+            <div style="font-size:9px; opacity:0.8;">Founder & Director of FBCA</div>
+        </div>
+        <div style="text-align:center; padding-bottom:5px;">
+            <h2 style="font-family:'Orbitron'; color:var(--neon-pink); font-size:20px; letter-spacing:5px;">FUTURE BOOST QUIZ LEAGUE</h2>
+            <h1 style="font-family:'Orbitron'; font-size:32px;">FUTURE BOOST COMPUTER ACADEMY</h1>
+            <div style="font-size:12px; color:var(--neon-blue); font-weight:bold;">Also Known As Technobright Education Pvt. Ltd.</div>
+        </div>
+        <div class="q-admin-profile">
+            <div class="q-img-ring" style="border-color:var(--gold);"><img src="D:\Docoments\Ankit.jpg"></div>
+            <div style="font-family:'Orbitron'; font-size:12px; color:var(--gold);">Ankit Kumar</div>
+            <div style="font-size:9px; opacity:0.8; color:var(--gold);">Host and Branch Manager</div>
+        </div>
+    </header>
 
-    <div class="timer-section">
-        <div class="timer-container" onclick="repeatTimer()">
-            <svg class="timer-svg"><circle cx="42.5" cy="42.5" r="38" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="7"/><circle id="timer-bar" cx="42.5" cy="42.5" r="38" fill="none" stroke="var(--gold)" stroke-width="7" stroke-dasharray="238" stroke-dashoffset="0" stroke-linecap="round" style="transition:1s linear;"/></svg>
-            <div id="timer-text">30</div>
-        </div>
-    </div>
+    <div class="timer-section">
+        <div class="timer-container" onclick="repeatTimer()">
+            <svg class="timer-svg"><circle cx="42.5" cy="42.5" r="38" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="7"/><circle id="timer-bar" cx="42.5" cy="42.5" r="38" fill="none" stroke="var(--gold)" stroke-width="7" stroke-dasharray="238" stroke-dashoffset="0" stroke-linecap="round" style="transition:1s linear;"/></svg>
+            <div id="timer-text">30</div>
+        </div>
+    </div>
 
-    <div class="quiz-container">
-        <div class="question-box" id="qText">Loading Quiz...</div>
-        <div class="options-grid" id="optContainer"></div>
-        <div id="explanation-box"></div>
-    </div>
+    <div class="quiz-container">
+        <div class="question-box" id="qText">Loading Quiz...</div>
+        <div class="options-grid" id="optContainer"></div>
+        <div id="explanation-box"></div>
+    </div>
 
-    <footer class="footer-controls">
-        <div style="position:absolute; left:40px; font-family:'Orbitron'; color:var(--neon-blue);" id="score-status">Q: 0/0 | Score: 0</div>
-        <button class="nav-btn" style="background:transparent; border:2px solid var(--neon-pink); color:var(--neon-pink);" onclick="prevQ()">← PREV</button>
-        <button class="nav-btn" style="background:var(--gold); color:black;" onclick="checkAns()">LOCK (Enter)</button>
-        <button class="nav-btn" style="background:var(--neon-blue); color:black;" onclick="nextQ()">NEXT →</button>
-    </footer>
+    <footer class="footer-controls">
+        <div style="position:absolute; left:40px; font-family:'Orbitron'; color:var(--neon-blue);" id="score-status">Q: 0/0 | Score: 0</div>
+        <button class="nav-btn" style="background:transparent; border:2px solid var(--neon-pink); color:var(--neon-pink);" onclick="prevQ()">← PREV</button>
+        <button class="nav-btn" style="background:var(--gold); color:black; box-shadow:0 0 15px var(--gold);" onclick="checkAns()">LOCK (Enter)</button>
+        <button class="nav-btn" style="background:var(--neon-blue); color:black;" onclick="nextQ()">NEXT →</button>
+    </footer>
 </div>
 
 <audio id="snd-timer"><source src="file:///E:/TEPL/AUdio/_Kbc_Question_Tune_ringtone.mp3"></audio>
@@ -136,90 +163,91 @@ body {
 <audio id="snd-new"><source src="file:///E:/TEPL/AUdio/_Kbc_Question_Sound_Effect_Notification_Ringtone.mp3"></audio>
 
 <script>
-    let quizData = [], currentIdx = 0, selectedIdx = null, timerVal = 30, timerInt = null, isAnswered = false, audioReady = false, score = 0;
-    const circ = 2 * Math.PI * 38;
+    let quizData = [], currentIdx = 0, selectedIdx = null, timerVal = 30, timerInt = null, isAnswered = false, audioReady = false, score = 0;
+    const circ = 2 * Math.PI * 38;
 
-    function enableAudio() { audioReady = true; }
-    function playSnd(id) { if (audioReady) { const s = document.getElementById(id); if(s) { s.currentTime = 0; s.play().catch(e=>{}); } } }
+    function enableAudio() { audioReady = true; }
+    function playSnd(id) { if (audioReady) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(e=>{}); } }
 
-    document.getElementById('excel-file').addEventListener('change', function(e) {
-        enableAudio(); // Critical for browser
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const workbook = XLSX.read(new Uint8Array(event.target.result), {type: 'array'});
-            const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
-            quizData = rows.slice(1).filter(r => r[1] && r[6]).map(row => ({
-                q: row[1], o: [row[2], row[3], row[4], row[5]],
-                a: {"A":0,"B":1,"C":2,"D":3}[String(row[6]).toUpperCase()] || 0,
-                exp: row[7] || ""
-            }));
-            document.getElementById('screen-1').style.display = 'none';
-            document.getElementById('screen-2').style.display = 'flex';
-            currentIdx = 0; score = 0; load();
-        };
-        reader.readAsArrayBuffer(e.target.files[0]);
-    });
+    document.getElementById('excel-file').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const workbook = XLSX.read(new Uint8Array(event.target.result), {type: 'array'});
+            const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
+            quizData = rows.slice(1).filter(r => r[1] && r[6]).map(row => ({
+                q: row[1], o: [row[2], row[3], row[4], row[5]],
+                a: {"A":0,"B":1,"C":2,"D":3}[String(row[6]).toUpperCase()] || 0,
+                exp: row[7] || ""
+            }));
+            document.getElementById('screen-1').style.display = 'none';
+            document.getElementById('screen-2').style.display = 'flex';
+            currentIdx = 0; score = 0; load();
+        };
+        reader.readAsArrayBuffer(e.target.files[0]);
+    });
 
-    function updateTimerUI(anim = true) {
-        document.getElementById('timer-text').innerText = timerVal;
-        const bar = document.getElementById('timer-bar');
-        bar.style.transition = anim ? "1s linear" : "none";
-        bar.style.strokeDashoffset = circ - (timerVal / 30) * circ;
-        bar.style.stroke = timerVal <= 10 ? "var(--wrong)" : "var(--gold)";
-    }
+    function updateTimerUI(anim = true) {
+        document.getElementById('timer-text').innerText = timerVal;
+        const bar = document.getElementById('timer-bar');
+        bar.style.transition = anim ? "1s linear" : "none";
+        bar.style.strokeDashoffset = circ - (timerVal / 30) * circ;
+        bar.style.stroke = timerVal <= 10 ? "var(--wrong)" : "var(--gold)";
+    }
 
-    function startTimer() {
-        if(timerInt) clearInterval(timerInt);
-        timerVal = 30; updateTimerUI(); playSnd('snd-timer');
-        timerInt = setInterval(() => { timerVal--; updateTimerUI(); if(timerVal <= 0) { clearInterval(timerInt); document.getElementById('snd-timer').pause(); if(!isAnswered) checkAns(); } }, 1000);
-    }
+    function startTimer() {
+        if(timerInt) clearInterval(timerInt);
+        timerVal = 30; updateTimerUI(); playSnd('snd-timer');
+        timerInt = setInterval(() => { timerVal--; updateTimerUI(); if(timerVal <= 0) { clearInterval(timerInt); document.getElementById('snd-timer').pause(); if(!isAnswered) checkAns(); } }, 1000);
+    }
 
-    function load() {
-        if(quizData.length === 0) return;
-        selectedIdx = null; isAnswered = false;
-        if(timerInt) clearInterval(timerInt);
-        document.getElementById('snd-timer').pause();
-        document.getElementById('explanation-box').style.display = 'none';
-        timerVal = 30; updateTimerUI(false); 
-        document.getElementById('score-status').innerText = `Q: ${currentIdx+1}/${quizData.length} | Score: ${score}`;
-        document.getElementById('optContainer').innerHTML = '';
-        const data = quizData[currentIdx];
-        playSnd('snd-new'); 
-        document.getElementById('qText').innerText = data.q;
-        ["A", "B", "C", "D"].forEach((label, i) => {
-            const div = document.createElement('div');
-            div.className = 'option'; 
-            div.innerHTML = `<strong>${label}:</strong> ${data.o[i]}`;
-            div.onclick = () => { if(!isAnswered) { selectedIdx = i; document.querySelectorAll('.option').forEach((o, idx) => o.classList.toggle('selected', idx === i)); } };
-            document.getElementById('optContainer').appendChild(div);
-        });
-        setTimeout(startTimer, 600);
-    }
+    function repeatTimer() { if(!isAnswered && quizData.length > 0) startTimer(); }
 
-    function checkAns() {
-        if(selectedIdx === null || isAnswered) return;
-        isAnswered = true; clearInterval(timerInt); document.getElementById('snd-timer').pause();
-        const data = quizData[currentIdx], options = document.querySelectorAll('.option');
-        if(selectedIdx === data.a) { playSnd('snd-correct'); score++; } 
-        else { playSnd('snd-wrong'); options[selectedIdx].classList.add('wrong'); }
-        options[data.a].classList.add('correct');
-        if(data.exp.trim() !== "") {
-            const expBox = document.getElementById('explanation-box');
-            expBox.innerHTML = `<strong>Explanation:</strong> ${data.exp}`;
-            expBox.style.display = 'block';
-        }
-        document.getElementById('score-status').innerText = `Q: ${currentIdx+1}/${quizData.length} | Score: ${score}`;
-    }
+    function load() {
+        if(quizData.length === 0) return;
+        selectedIdx = null; isAnswered = false;
+        if(timerInt) clearInterval(timerInt);
+        document.getElementById('snd-timer').pause();
+        document.getElementById('explanation-box').style.display = 'none';
+        timerVal = 30; updateTimerUI(false); 
+        document.getElementById('score-status').innerText = `Q: ${currentIdx+1}/${quizData.length} | Score: ${score}`;
+        document.getElementById('optContainer').innerHTML = '';
+        const data = quizData[currentIdx];
+        playSnd('snd-new'); 
+        document.getElementById('qText').innerText = data.q;
+        ["A", "B", "C", "D"].forEach((label, i) => {
+            const div = document.createElement('div');
+            div.className = 'option'; 
+            div.innerHTML = `<span style="color:var(--neon-blue);font-weight:bold;margin-right:15px;">${label}:</span> ${data.o[i]}`;
+            div.onclick = () => { if(!isAnswered) { selectedIdx = i; document.querySelectorAll('.option').forEach((o, idx) => o.classList.toggle('selected', idx === i)); } };
+            document.getElementById('optContainer').appendChild(div);
+        });
+        setTimeout(startTimer, 600);
+    }
 
-    function nextQ() { if(currentIdx < quizData.length-1) { currentIdx++; load(); } }
-    function prevQ() { if(currentIdx > 0) { currentIdx--; load(); } }
+    function checkAns() {
+        if(selectedIdx === null || isAnswered) return;
+        isAnswered = true; clearInterval(timerInt); document.getElementById('snd-timer').pause();
+        const data = quizData[currentIdx], options = document.querySelectorAll('.option');
+        if(selectedIdx === data.a) { playSnd('snd-correct'); score++; } 
+        else { playSnd('snd-wrong'); options[selectedIdx].classList.add('wrong'); }
+        options[data.a].classList.add('correct');
+        if(data.exp.trim() !== "") {
+            const expBox = document.getElementById('explanation-box');
+            expBox.innerHTML = `<strong>Explanation:</strong> ${data.exp}`;
+            expBox.style.display = 'block';
+        }
+        document.getElementById('score-status').innerText = `Q: ${currentIdx+1}/${quizData.length} | Score: ${score}`;
+    }
 
-    window.addEventListener('keydown', (e) => {
-        const k = e.key.toUpperCase();
-        if(["A","B","C","D"].includes(k) && !isAnswered) { selectedIdx = {"A":0,"B":1,"C":2,"D":3}[k]; document.querySelectorAll('.option').forEach((o, idx) => o.classList.toggle('selected', idx === selectedIdx)); }
-        if(k === "R" && !isAnswered) startTimer();
-        if(e.key === "Enter") checkAns(); if(e.key === "ArrowRight") nextQ(); if(e.key === "ArrowLeft") prevQ();
-    });
+    function nextQ() { if(currentIdx < quizData.length-1) { currentIdx++; load(); } }
+    function prevQ() { if(currentIdx > 0) { currentIdx--; load(); } }
+
+    window.addEventListener('keydown', (e) => {
+        const k = e.key.toUpperCase();
+        if(["A","B","C","D"].includes(k) && !isAnswered) { selectedIdx = {"A":0,"B":1,"C":2,"D":3}[k]; document.querySelectorAll('.option').forEach((o, idx) => o.classList.toggle('selected', idx === selectedIdx)); }
+        if(k === "R" && !isAnswered) startTimer();
+        if(e.key === "Enter") checkAns(); if(e.key === "ArrowRight") nextQ(); if(e.key === "ArrowLeft") prevQ();
+    });
 </script>
 </body>
 </html>
